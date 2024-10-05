@@ -15,9 +15,6 @@ from tools.logger import _logger
 
 logger = _logger('url_document_loader')
 
-
-
-
 client = ScrapingBeeClient(os.environ['SCRAPINGBEE_API_KEY'])
 params = {"render_js": "True"} # works... , "wait": "1000", "timeout": "1500", "premium_proxy": "True" }
 logger.info(f'scrapingbee client params: {params}')
@@ -129,3 +126,18 @@ def load_page_for_url(url: str):
     )
     page_content = convert_html_to_markdown_content(html)
     return Document(page_content, metadata=metadata)
+
+
+class UrlDocumentLoader:
+    def __init__(self, url: str):
+        self.url = url
+        self.content = None
+        self.success = False
+
+    def load(self):
+        document = load_page_for_url(self.url)
+        if document:
+            self.content = document.page_content
+            self.success = True
+        else:
+            self.success = False

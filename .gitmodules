@@ -1,0 +1,3 @@
+[submodule "usercard-explorer"]
+	path = usercard-explorer
+	url = https://github.com/Blue-Cardigan/usercard-explorer.git

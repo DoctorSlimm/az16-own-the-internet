@@ -17,11 +17,14 @@ class RunIO(BaseModel):
     search_terms: str
 
     """Load module output."""
-    contacts: List[Dict] = []                   # has id
-    documents: List[Dict] = []                  # has id
+    contacts: List[Dict] = []                   # accounts.
+    documents: List[Dict] = []                  # issues.
 
     """Labelling module output."""
-    document_labels: List[Dict] = []            # has id
+    document_labels: List[Dict] = []            # has id?
+
+
+    """Runtime output..."""
 
 
 

@@ -2,6 +2,15 @@ from typing import List, Dict
 from pydantic import BaseModel
 
 
+
+from tools.logger import _logger
+
+from loader.github_loader import GithubLoader
+
+
+logger = _logger('main')
+
+
 class ResponseIO(BaseModel):
     metrics: Dict[str, int]
     contacts: List[Dict]
@@ -25,8 +34,6 @@ class RunIO(BaseModel):
 
 
     """Runtime output..."""
-
-
 
 
 

@@ -1,20 +1,22 @@
-import re
 import os
-import json
-from copy import deepcopy
-
 from pydantic import BaseModel
 from typing import List, Optional
+from langchain_core.documents import Document
 
 from bs4 import BeautifulSoup
 from scrapingbee import ScrapingBeeClient
-from urllib.parse import urlparse, urlunparse, quote, urljoin
+
+from urllib.parse import urlparse, urlunparse, quote
 from langchain_community.document_transformers import MarkdownifyTransformer
 
 from tools.llm import gpt4
+from tools.logger import _logger
 
 
 logger = _logger('url_document_loader')
+
+
+
 
 client = ScrapingBeeClient(os.environ['SCRAPINGBEE_API_KEY'])
 params = {"render_js": "True"} # works... , "wait": "1000", "timeout": "1500", "premium_proxy": "True" }
@@ -31,11 +33,9 @@ class UrlDocumentMetadata(BaseModel):
     title: Optional[str] = None             # Allows None for this field as input
     description: Optional[str] = None       # Allows None for this field
 
-    nested_links: List[str] = []
-    nested_social_links: List[str] = []     #... ermmm ok
-
-    nested_image_urls: List[str] = []
-
+    # nested_links: List[str] = []
+    # nested_social_links: List[str] = []     #... ermmm ok
+    # nested_image_urls: List[str] = []
 
     @classmethod
     def from_html_and_base_url(cls, html, base_url):
@@ -50,28 +50,13 @@ class UrlDocumentMetadata(BaseModel):
         if description: description = description.get("content", "none")
         else: description = None
 
-        # can also load from google search thumbnail or google images
-        icon = soup.find("link", rel=lambda value: value and "icon" in value.lower())
-        if icon: icon = icon.get("href")
-        else: icon = None
-
-        # links
-        nested_links = extract_nested_links_from_html(html, base_url)
-
-        # specific social links
-        nested_social_links = filter_social_links(nested_links)
-
-        # image urls
-        nested_image_urls = extract_image_urls_from_html(html)
-        nested_image_urls = list(set(nested_image_urls)) or []
-
         return cls(
-            icon=icon,
             title=title,
             description=description,
-            nested_links=nested_links,
-            nested_social_links=nested_social_links,
-            nested_image_urls=nested_image_urls
+            ### Unused... (might be useful if repose mentionde on page)
+            # nested_links=nested_links,
+            # nested_social_links=nested_social_links,
+            # nested_image_urls=nested_image_urls
         )
 
 
@@ -108,8 +93,7 @@ def convert_html_to_markdown_content(html) -> str:
         autolinks=True,             # Ensure that automatic link style is used
         heading_style='ATX'         # Use 'ATX' style headings
     )
-    content = md_transformer.transform_documents([LangchainDocument(html)])[0].page_content
-
+    content = md_transformer.transform_documents([Document(html)])[0].page_content
 
     ### unstructured is Too much RAM
     # content = clean_with_unstructured(content,
@@ -131,125 +115,17 @@ def convert_html_to_markdown_content(html) -> str:
 
 
 
-def scrapingbee_url_loader(url: str):
+def load_page_for_url(url: str):
     """Loads the page input url to markdown text for page reading"""
 
     html = load_html_content(url) # headers... clasify redirector ir bad...
     if html is None: return None
 
     metadata = UrlDocumentMetadata.from_html_and_base_url(html, url)
+    metadata = dict(
+        url=url,
+        title=metadata.title,
+        description=metadata.description,
+    )
     page_content = convert_html_to_markdown_content(html)
-    return Document(page_content, metadata=dict(
-
-
-
-
-
-
-class UrlDocumentLoader(BaseModel):
-    """status"""
-    success: bool = False
-
-    """deprecated"""
-    icon: str = None
-    link: str = None
-    document: Document = None
-    metadata: Optional[UrlDocumentMetadata] = None
-
-    """latest"""
-    url: str = None
-
-    links: List[str] = []               # 
-    images: List[str] = []              # 
-    socials: List[str] = []             # could just extract and filetr at thend...
-
-    html: Optional[str] = None
-    content: Optional[str] = None
-
-    summary: Optional[str] = None
-
-
-    def lalaload(self):
-        """load and summarize the document."""
-
-        self.html = load_html_content(self.url) # headers... clasify redirector ir bad...
-        if self.html is None: return
-
-        # extract icon, title, description, links, socials, images
-        self.metadata = UrlDocumentMetadata.from_html_and_base_url(self.html, self.url)
-
-        # update links (extract nested links from html metadata)
-        self.icon = self.metadata.icon
-        self.links += self.metadata.nested_links
-        self.images += self.metadata.nested_image_urls
-
-        # html -> markdown
-        self.content = convert_html_to_markdown_content(self.html)
-
-        # update links (extract nested links from markdown content)
-        self.links += extract_nested_links_from_markdown(self.content)
-
-        # update markdown content (remove nested links)
-        self.content = remove_nested_links_from_markdown(self.content)
-
-        # filter socials
-        self.socials = filter_social_links(self.links)
-
-
-        ## classify document as wether valid or invalid
-        # >> proxy by (status code error. see more... parked domains etc.)
-
-        ## summarize document... if too short warning???
-        self.summary = summarize(self.content)
-        if len(self.summary.split()) < 100:
-            logger.warning(f'warning: summary is short {self.url}.')
-            logger.warning(f'summary: {self.summary}')
-
-        ### Backwards compatibility
-        self.document = Document(
-            self.summary,
-            metadata=dict(
-                link_or_filename=self.link,
-                source_of_page_content='website',
-                encoded=json.dumps(self.metadata.model_dump())
-            )
-        )
-
-        ### update success status
-        self.success = True
-
-    def load(self):
-
-        try:
-            self.lalaload() # if this was cmopatible with .load() would be fine..?
-        
-        except Exception as e:
-            logger.error(f'error loading document: {e}')
-            self.success = False
-
-    def summarize(self):
-        if self.document is None:
-            return None
-        
-        content = 'Summarize the web page content (Note if the web page if 404 or some other domain error or captch or login please return FAILED_TO_LOAD in capitals.):\n\n===Content' + self.document.page_content
-
-        try:
-            while len(tokenizers.tiktokenize(content)) > 2048:
-                content = content[:len(content)//2]
-
-            completion = gpt4.invoke(content).content
-            if 'FAILED_TO_LOAD' in completion:
-                self.document = None
-                raise Exception('FAILED_TO_LOAD')
-
-            self.document.page_content = completion
-
-        except Exception as e:
-            tokens = tokenizers.tiktokenize(content)
-            logger.error(e)
-            logger.error(f"Failed to summarize {self.document.metadata.link_or_filename}. with {len(tokens)} tokens.")
-
-        return deepcopy(self.document)
-
-
-    
+    return Document(page_content, metadata=metadata)

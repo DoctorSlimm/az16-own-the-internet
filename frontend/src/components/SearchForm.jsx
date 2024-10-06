@@ -14,7 +14,7 @@ const SearchForm = ({ onSearch }) => {
     <form onSubmit={handleSubmit} className="flex space-x-2">
       <Input
         type="text"
-        placeholder="A short description of your issue or question..."
+        placeholder="A short product description or the issue your sdk solves..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         className="flex-grow bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:ring-neon-blue focus:border-neon-blue"

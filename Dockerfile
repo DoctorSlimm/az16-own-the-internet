@@ -25,6 +25,12 @@ WORKDIR /workdir/frontend
 # Copy only the frontend directory (this prevents duplication in the path)
 COPY ./frontend /workdir/frontend
 
+# Echo statement to indicate the start of the frontend build
+RUN echo "STARTING FRONTEND BUILD"
+
+# List the contents of the frontend directory to ensure files are copied
+RUN ls -al /workdir/frontend
+
 # Install frontend dependencies
 RUN npm install
 

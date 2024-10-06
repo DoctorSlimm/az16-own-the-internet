@@ -31,8 +31,7 @@ const UserCard = ({ user }) => {
           </div>
         </div>
         <div className="mt-2 text-white">
-          <span><strong className="text-neon-blue">Company:</strong> {user.company || 'N/A'}</span>
-          <span className="ml-4"><strong className="text-neon-blue">Location:</strong> {user.location || 'N/A'}</span>
+          <span><strong className="text-neon-blue">Activation criteria:</strong> {user.company || 'N/A'}</span>
         </div>
         <div className="mt-2 text-white">
           <strong className="text-neon-blue">Labels:</strong> {user.labels.join(', ')}

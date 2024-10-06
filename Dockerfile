@@ -23,7 +23,4 @@ COPY . /workdir
 RUN poetry install --no-interaction --no-ansi
 
 # Install frontend dependencies and build the frontend
-RUN npm install --prefix /workdir/frontend && npm run build --prefix /workdir/frontend
-
-# Optional: clean up unnecessary packages or files after the build
-RUN rm -rf /workdir/frontend/node_modules
+RUN cd workdir/frontend && npm install && npm run build

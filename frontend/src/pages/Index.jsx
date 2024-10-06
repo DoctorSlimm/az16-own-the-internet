@@ -23,7 +23,7 @@ const fetchDemoUsers = async (query) => {
 };
 
 
-// Fetch users from the API
+// Fetch users from the API (running same container)
 const baseURL = "http://0.0.0.0:8000"       // API base URL
 
 const fetchApiUsers = async (query) => {

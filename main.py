@@ -12,15 +12,15 @@ from dotenv import load_dotenv, find_dotenv
 ########################
 args = argparse.ArgumentParser()
 
-"""Application, host, and port (eg: modules.search:app)"""
+# """Application, host, and port (eg: modules.search:app)"""
 args.add_argument("--app", type=str, default="app.app:app")
 args.add_argument("--host", type=str, default="0.0.0.0")
 args.add_argument("--port", type=int, default=8000)
 
-"""Development (reload + development domain)
-    * https://pypi.org/project/ngrok/0.7.0/ 
-    * https://ngrok.com/docs/using-ngrok-with/fastAPI/
-"""
+# """Development (reload + development domain)
+#     * https://pypi.org/project/ngrok/0.7.0/ 
+#     * https://ngrok.com/docs/using-ngrok-with/fastAPI/
+# """
 args.add_argument("--dev", action="store_true", default=False)
 args.add_argument("--domain", type=str, default="nerdy.ngrok.io")
 

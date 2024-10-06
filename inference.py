@@ -16,6 +16,8 @@ from labelling.inference import (
     normalize_list_of_numbers
 )
 
+from processor.inference import generate_captions_for_contexts_list
+
 
 class Contact(BaseModel):
 
@@ -108,6 +110,9 @@ def contact_from_account_data(account_data: AccountData) -> Contact:
     ### confidence score
     confidence = compute_label_intent_score(labels)
 
+    for doc in documents:
+        print(doc.metadata.keys())
+
 
     contact = Contact(
         url=url,
@@ -158,7 +163,12 @@ def inference_fn(query: str, verbose=False) -> Dict: # make custom model...
     # Step 4: Output the contacts from the account data.
     contacts = output_fn(account_data_list)
 
-    # Step 5: Compute Metrics
+    # Step 5: Generate Caption why person is relevant.
+    captions = generate_captions_for_contexts_list([yaml.dump(c.model_dump()) for c in contacts])
+    for contact, caption in zip(contacts, captions):
+        contact.caption = caption
+
+    # Step 6: Compute Metrics (Noise / Pain / Gain)
     metrics = {}
 
     return dict(

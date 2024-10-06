@@ -96,14 +96,22 @@ def contact_to_display_data(contact: Contact) -> DisplayCardSchema:
     profileImage = f'{contact.url}.png'
     labels = contact.labels
 
-    Timeline = contact.timeline # bad keys...
+    location = contact.caption
+
+    company = contact.caption
+
+    # ['url', 'title', 'creator', 'created_at', 'comments', 'state', 'labels', 'assignee', 'milestone', 'locked', 'number', 'is_pull_request']
+    timeline = contact.timeline 
 
     return DisplayCardSchema(
         confidence=confidence,
         displayName=displayName,
         profileImage=profileImage,
         labels=labels,
-        Timeline=Timeline
+        timeline=timeline,
+
+        location=location,
+        company=company
     )
 
 

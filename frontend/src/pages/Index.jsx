@@ -115,8 +115,8 @@ const Index = () => {
     return (
         <div className="min-h-screen bg-gray-900 text-white p-8">
             <div className="max-w-6xl mx-auto">
-                <h1 className="text-5xl font-light mb-8 text-left bg-clip-text text-transparent bg-neon-gradient from-neon-blue via-neon-purple to-neon-pink">360NoScope.dev</h1>
-                <p className="text-lg mb-2 text-left">Find developers facing the most unique pain your solution is solving.</p>
+                <h1 className="text-5xl font-light mb-8 text-left bg-clip-text text-transparent bg-neon-gradient from-neon-blue via-neon-purple to-neon-pink">360NoScope</h1>
+                <p className="text-lg mb-2 text-left">Find developers facing issues you solve. Activate your Squad</p>
                 <SearchForm onSearch={handleSearch} />
                 {isLoading && <HexagonLoader />}
                 {isError && <p className="text-center mt-4 text-red-500">Error: {error.message}</p>}

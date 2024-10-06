@@ -47,10 +47,10 @@ const UserCard = ({ user }) => {
           </button>
           {isActivityOpen && (
             <ul className="list-disc list-inside mt-2 text-white">
-              {user.Timeline.map((activity, index) => (
+              {user.timeline.map((activity, index) => (
                 <li key={index} className="text-sm mb-1">
                   <a href={activity.url} target="_blank" rel="noopener noreferrer" className="text-neon-blue hover:text-neon-pink">
-                    {activity.title}: {activity.caption}
+                    {activity.url}: {activity.url}
                   </a>
                 </li>
               ))}

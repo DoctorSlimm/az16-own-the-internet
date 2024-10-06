@@ -15,7 +15,7 @@ const SearchForm = ({ onSearch }) => {
       <Input
         type="text"
         placeholder="A short description of your issue or question..."
-        value={'az16-own-the-internet:' + query}
+        value={query}
         onChange={(e) => setQuery(e.target.value)}
         className="flex-grow bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:ring-neon-blue focus:border-neon-blue"
       />

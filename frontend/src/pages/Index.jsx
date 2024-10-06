@@ -33,23 +33,15 @@ const fetchApiUsers = async (query) => {
 
   try {
 
-    // ApiKey is the first part of the query
-    const xApiKey = query.split(':')[0];
-    console.log('xApiKey:', xApiKey);
-
-    // Query is the second part of the query
-    const searchQuery = query.split(':')[1];
-    console.log('searchQuery:', searchQuery);
-
     // Perform API POST request with axios
     const apiClient = axios.create({
         baseURL: baseURL,
-        headers: {'x-api-key': xApiKey}
+        headers: {'x-api-key': 'az16-own-the-internet'}
     });
 
 
     // Make the API request
-    const response = await apiClient.post('/inference', {query: searchQuery});
+    const response = await apiClient.post('/inference', {query: query});
     console.log('Response:', response);
 
     // Assuming the response has a data field with the users lol.

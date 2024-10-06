@@ -18,7 +18,7 @@ class StackRequirements(BaseModel):
     frameworks: List[str] = Field(description="list of framework or sdk names")
 
 
-def identify_requirements(product_description: str) -> StackRequirements:
+def identify_requirements(product_description: str, verbose=True) -> StackRequirements:
     """Load the stack requirements for a given product description."""
 
     product_description = f"""{product_description}
@@ -28,8 +28,10 @@ def identify_requirements(product_description: str) -> StackRequirements:
 * Please return no more than 7 stack requirements or alternative solutions.
 """
 
+    # set verbose
+    agent_executor.verbose = verbose 
+
     # run analysis
-    
     output = agent_executor.invoke({"input": product_description})
     analysis = output['output']
 

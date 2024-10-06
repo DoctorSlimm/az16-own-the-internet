@@ -15,13 +15,13 @@ logger = _logger('labelling.inference')
 
 ### Templates.
 
-label_definitions = [
+label_options = [
 
-    ## poor questions
+    ## poor questions (0)
     {"label": "basic_setup_onboarding", "description": "Initial product exploration, focused on setup, free trials, and basic integrations."},
     {"label": "comparing_competitors", "description": "Price-sensitive customers comparing your product against competitors based on features and pricing."},
 
-    ## good questions
+    ## good questions (+1)
     {"label": "integration_and_customizations", "description": "Integration with existing tech stacks, API compatibility, and customization needs."},
     {"label": "security_and_compliance", "description": "Focus on data security, regulatory compliance, and security protocols."},
     {"label": "scalability", "description": "Concern with the product’s ability to scale as the business grows."},
@@ -29,10 +29,11 @@ label_definitions = [
     {"label": "on_premise_private_cloud", "description": "Requests for on-premise or private cloud deployments, often for enterprise customers."},
     {"label": "long_term_support", "description": "Customers seeking long-term product stability and support, often tied to multi-year contracts."},
     {"label": "platform_dependency", "description": "Customers trying multiple options to avoid switching platforms, with concerns about vendor lock-in."},
-    
+
+    ## neutral questions (0) 
     {"label": "other", "description": "Other concerns not covered by the existing labels."}
 ]
-label_definitions = yaml.dump(label_definitions, default_flow_style=False)
+label_definitions = yaml.dump(label_options, default_flow_style=False)
 
 
 template = """You are an expert open source github repository maintainer. \
@@ -110,5 +111,55 @@ def agenerate_labels_for_github_issue_list(github_issue_content_list, num_proc=1
     list_of_labels = [labels if labels else [] for labels in list_of_labels]
 
     return list_of_labels
+
+
+def compute_label_intent_score(predicted_labels: List[str]) -> float:
+    """copmute intent score from labels, average intent from rank of labels."""
+
+
+    # label score intentions
+
+    positive_labels = ["integration_and_customizations", "security_and_compliance", "scalability", "analytics_and_advanced_monitoring", "on_premise_private_cloud", "long_term_support", "platform_dependency"]
+
+    negative_labels = ["other", "basic_setup_onboarding", "comparing_competitors"]
+
+
+
+    # compute total and divide by maximum
+
+    cumulative_score = 0 
+
+    total_label_max_score = len(predicted_labels)
+
+    # exit no div by zero.
+    if total_label_max_score == 0:
+        return 0
+
+
+    for predicted in predicted_labels:
+
+        if predicted in positive_labels:
+
+            cumulative_score += 1
+    
+
+    return round(cumulative_score / total_label_max_score, 2)
+    
+
+
+def standardize_list_of_numbers(ls: List[float]) -> List[float]:
+    """standardize a list of numbers"""
+
+    _max = max(ls)
+    _min = min(ls)
+    return [round((x - _min) / (_max - _min), 2) for x in ls]    
+
+
+def normalize_list_of_numbers(ls: List[float]) -> List[float]:
+    """normalize a list of numbers"""
+
+    _max = max(ls)
+    return [round(x / _max, 2) for x in ls]
+
 
 

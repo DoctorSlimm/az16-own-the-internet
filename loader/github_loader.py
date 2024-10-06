@@ -158,6 +158,10 @@ class GithubLoader(BaseModel):
 
             creator = issue.metadata.get('creator', None)
 
+            if '[bot]' in creator:
+                if self.verbose: logger.warning(f"Skipping bot {creator}")
+                continue
+
             is_contributor = creator in contributors_list
 
 

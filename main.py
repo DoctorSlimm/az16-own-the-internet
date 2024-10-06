@@ -1,173 +1,65 @@
-import gradio as gr
-import pandas as pd
-from typing import List, Dict
-
-from tools.logger import _logger
-
-from search.inference import StackRequirements, identify_requirements
-
-from loader.inference import AccountData, load_account_data_list
-
-from labelling.inference import generate_labels_for_github_issue
+import os
+import logging
+import uvicorn
+import argparse
+import subprocess
+from time import sleep
+from dotenv import load_dotenv, find_dotenv
 
 
-logger = _logger('main')
+########################
+# Arguments
+########################
+args = argparse.ArgumentParser()
+
+"""Application, host, and port (eg: modules.search:app)"""
+args.add_argument("--app", type=str, default="app.app:app")
+args.add_argument("--host", type=str, default="0.0.0.0")
+args.add_argument("--port", type=int, default=8000)
+
+"""Development (reload + development domain)
+    * https://pypi.org/project/ngrok/0.7.0/ 
+    * https://ngrok.com/docs/using-ngrok-with/fastAPI/
+"""
+args.add_argument("--dev", action="store_true", default=False)
+args.add_argument("--domain", type=str, default="nerdy.ngrok.io")
 
 
-### gradio frontend / fastapi
-
-# just return a json...
-
-# Stage 1: Input query and process to extract search terms
-
-def stage1(product_description: str = 'A gaming-specific SDK for the solana blockchain.'):
-
-    stack_requirements: StackRequirements = identify_requirements(
-        product_description
-    )
-
-    framework_list = stack_requirements.frameworks
-
-    search_terms = ', '.join(framework_list)
-
-    return search_terms
+### Parse Arguments
+args = args.parse_args()
+logging.info(f"Runtime Arguments: {args}")
+sleep(3)
 
 
-# Stage 2: Find accounts for search terms by github repository activity.
-
-def stage2(
-        ## sources would be nice...
-        # https://solana.com/developers/guides/games/game-sdks
-        search_terms: str = 'solana unity magicblock sdk, \
-godot engine, solana gameshift, turbo rust game engine, \
-honeycomb protocol, unreal sdk, bitfrost unreal sdk, \
-thugz unreal sdk, star atlas foundation kit, \
-solana anchor framework, phaser'
-    ):
-
-    logger.info(f"search_terms: {search_terms}")
-
-    # Find accounts for search terms
-    # by github repository activity and load from issues
-    # - excluding contributers
-    # - excluding invalid repositories (stars / open_issues / rank bm25)
-
-    search_terms = search_terms.split(', ')
-
-    account_data_list: List[AccountData] = load_account_data_list(
-
-        search_terms,
-
-        verbose=True
-    )
+############################
+# Load Environment Variables
+############################
+load_dotenv(find_dotenv('.env'), override=True, verbose=True)
 
 
-    # list of accounts metadatas (minify / model...)
+if args.dev:
 
-    # { login url type site_admin name hireable public_repos public_gists followers following created_at updated_at location email twitter_username bio company blog}
+    #####################################
+    # Run Application in Development Mode
+    #####################################
 
-    accounts = [
+    logging.warning(f"""### Running in Development Mode\n\n>> https://{args.domain}\n\n""")
 
-        data.account.metadata           # {Search Results
+    CMD = ["poetry", "run", "ngrok-asgi", "uvicorn", args.app]
+    ARGS = ["--port", str(args.port), "--domain", args.domain, "--reload"]
 
-        for data in account_data_list
+    try: subprocess.run(CMD + ARGS, check=True)
+    except Exception as e: logging.error(f"An error occurred: {e}")
+    finally: logging.info("Application shutdown complete.")
 
-    ]
 
-    # list of list of documents for each account. (to label...)
+#####################################
+# Main Application Runtime
+#####################################
 
-    account_documents = [
+logging.info("### Running in Production Mode")
 
-        data.documents 
-        
-        for data in account_data_list
-    ]
-
-    
-
-    return pd.DataFrame(accounts)
+uvicorn.run(args.app, host=args.host, port=args.port)
 
 
 
-
-
-
-### Gradio interface for each stage
-
-with gr.Blocks() as demo:
-
-    # Query input for product description
-    query_input = gr.Textbox(
-        # value=""
-
-        "A gaming-specific SDK for the solana blockchain.",
-
-        label="Product description:"
-    )
-
-    # Stage 1: Search terms output
-    search_terms_output = gr.Textbox(
-
-        "solana unity magicblock sdk, \
-godot engine, solana gameshift, turbo rust game engine, \
-honeycomb protocol, unreal sdk, bitfrost unreal sdk, \
-thugz unreal sdk, star atlas foundation kit, \
-solana anchor framework, phaser",
-
-        label="Identified alternative frameworks:",
-
-        #interactive=False
-
-        interactive=True
-
-    )
-    
-    # Stage 2: Search results table
-    search_results_output = gr.Dataframe(
-
-        pd.DataFrame(
-            columns=['login', 'confidence']
-        ),
-        
-        label="Search Results",
-
-        interactive=True
-    )
-
-    # Stage 3: Annotate and Re-Rank accounts...
-    # - by issue similarity to Product description.
-    # - by labelling score intent.
-    # - by wether has a company in description.
-    
-
-    ### Set up the logic between the stages
-
-
-    query_input.submit(
-        stage1,
-        inputs=query_input,
-        outputs=search_terms_output
-    )
-
-    search_terms_output.submit(
-        stage2,
-        inputs=search_terms_output,
-        outputs=search_results_output,
-        # trigger_mode='once'
-    )
-
-    # ...score and stuff.
-
-
-### Reload mode
-# https://www.gradio.app/guides/developing-faster-with-reload-mode
-### >> cli: poetry run gradio main.py -demo-name=my_demo
-###############
-# Tip: the `gradio` command does not detect the parameters 
-# passed to the `launch()` methods because the `launch()`
-# method is never called in reload mode.
-# For example, setting `auth`, or `show_error` in `launch()` 
-# will not be reflected in the app.
-
-if __name__ == "__main__":
-    demo.launch()

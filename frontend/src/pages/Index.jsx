@@ -24,7 +24,7 @@ const fetchDemoUsers = async (query) => {
 
 
 // Fetch users from the API (running same container)
-const baseURL = "http://0.0.0.0:8000"       // API base URL
+const baseURL = "https://main-5868-5395c8d0-2whwroq0.onporter.run"       // API base URL
 
 const fetchApiUsers = async (query) => {
 

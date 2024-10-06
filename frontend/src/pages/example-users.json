@@ -1,0 +1,170 @@
+[
+  {
+    "id": 1,
+    "profileImage": "https://example.com/alice.jpg",
+    "displayName": "Alice GameDev",
+    "githubProfileUrl": "https://github.com/alicegamedev",
+    "company": "Solana Game Studios",
+    "location": "San Francisco, CA",
+    "followerCount": 3500,
+    "issueResponseCount": 127,
+    "labels": ["Game Developer", "Solana Expert", "Engine Optimizer", "Unity Developer"],
+    "confidence": 0.95,
+    "Timeline": [
+      {
+        "title": "commit",
+        "url": "https://github.com/alicegamedev/solana-game-engine/commit/1234567890abcdef",
+        "timestamp": "2024-04-16T09:20:00Z",
+        "caption": "Optimized rendering pipeline for Solana games",
+        "labels": ["Enterprise Question", "Security Concern", "Windows VM"]
+      },
+      {
+        "title": "issue",
+        "url": "https://github.com/alicegamedev/solana-game-engine/issues/123",
+        "timestamp": "2024-04-17T11:15:00Z",
+        "caption": "Issue reported: 'Slow transaction speed for in-game purchases'",
+        "labels": ["Enterprise Question", "Security Concern", "Windows VM"]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "profileImage": "https://example.com/bob.jpg",
+    "displayName": "Bob BlockchainDev",
+    "githubProfileUrl": "https://github.com/bobblockchain",
+    "company": "Ethereum Solutions",
+    "location": "Berlin, Germany",
+    "followerCount": 5200,
+    "issueResponseCount": 203,
+    "labels": ["Blockchain Developer", "Smart Contract Expert", "Solidity Guru", "DeFi Enthusiast"],
+    "confidence": 0.98,
+    "Timeline": [
+      {
+        "title": "commit",
+        "url": "https://github.com/bobblockchain/defi-protocol/commit/abcdef1234567890",
+        "timestamp": "2024-04-18T14:30:00Z",
+        "caption": "Implemented new yield farming strategy",
+        "labels": ["DeFi", "Smart Contracts", "Gas Optimization"]
+      },
+      {
+        "title": "issue",
+        "url": "https://github.com/bobblockchain/defi-protocol/issues/456",
+        "timestamp": "2024-04-19T10:45:00Z",
+        "caption": "Issue reported: 'High gas costs in token swap operations'",
+        "labels": ["Gas Optimization", "Performance", "Ethereum"]
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "profileImage": "https://example.com/carol.jpg",
+    "displayName": "Carol AIResearcher",
+    "githubProfileUrl": "https://github.com/carolai",
+    "company": "DeepMind Labs",
+    "location": "London, UK",
+    "followerCount": 7800,
+    "issueResponseCount": 156,
+    "labels": ["AI Researcher", "Machine Learning Expert", "Neural Networks", "Computer Vision"],
+    "confidence": 0.97,
+    "Timeline": [
+      {
+        "title": "commit",
+        "url": "https://github.com/carolai/vision-transformer/commit/9876543210fedcba",
+        "timestamp": "2024-04-20T16:55:00Z",
+        "caption": "Improved attention mechanism in Vision Transformer",
+        "labels": ["AI", "Computer Vision", "Performance Optimization"]
+      },
+      {
+        "title": "issue",
+        "url": "https://github.com/carolai/vision-transformer/issues/789",
+        "timestamp": "2024-04-21T09:30:00Z",
+        "caption": "Issue reported: 'Excessive memory usage during large-scale training'",
+        "labels": ["Memory Optimization", "Large-scale Training", "GPU Utilization"]
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "profileImage": "https://example.com/david.jpg",
+    "displayName": "David CloudArch",
+    "githubProfileUrl": "https://github.com/davidcloud",
+    "company": "AWS Solutions",
+    "location": "Seattle, WA",
+    "followerCount": 4100,
+    "issueResponseCount": 189,
+    "labels": ["Cloud Architect", "DevOps Expert", "Kubernetes Specialist", "Serverless Advocate"],
+    "confidence": 0.96,
+    "Timeline": [
+      {
+        "title": "commit",
+        "url": "https://github.com/davidcloud/serverless-framework/commit/fedcba0987654321",
+        "timestamp": "2024-04-22T11:10:00Z",
+        "caption": "Added support for multi-region deployments",
+        "labels": ["Serverless", "AWS", "Multi-region"]
+      },
+      {
+        "title": "issue",
+        "url": "https://github.com/davidcloud/serverless-framework/issues/321",
+        "timestamp": "2024-04-23T13:25:00Z",
+        "caption": "Issue reported: 'Long cold start times for Lambda functions'",
+        "labels": ["Performance", "AWS Lambda", "Cold Start"]
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "profileImage": "https://example.com/eva.jpg",
+    "displayName": "Eva SecurityExpert",
+    "githubProfileUrl": "https://github.com/evasecurity",
+    "company": "CyberShield Inc.",
+    "location": "Tel Aviv, Israel",
+    "followerCount": 6300,
+    "issueResponseCount": 231,
+    "labels": ["Security Expert", "Penetration Tester", "Cryptography Specialist", "Zero Trust Advocate"],
+    "confidence": 0.99,
+    "Timeline": [
+      {
+        "title": "commit",
+        "url": "https://github.com/evasecurity/zero-trust-framework/commit/a1b2c3d4e5f6g7h8i9j0",
+        "timestamp": "2024-04-24T15:40:00Z",
+        "caption": "Implemented advanced threat detection algorithm",
+        "labels": ["Security", "Threat Detection", "Zero Trust"]
+      },
+      {
+        "title": "issue",
+        "url": "https://github.com/evasecurity/zero-trust-framework/issues/654",
+        "timestamp": "2024-04-25T08:50:00Z",
+        "caption": "Issue reported: 'Weak encryption for data-in-transit'",
+        "labels": ["Encryption", "Data Security", "Network Security"]
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "profileImage": "https://example.com/frank.jpg",
+    "displayName": "Frank MobileDev",
+    "githubProfileUrl": "https://github.com/frankmobile",
+    "company": "AppWizards LLC",
+    "location": "Tokyo, Japan",
+    "followerCount": 3800,
+    "issueResponseCount": 142,
+    "labels": ["Mobile Developer", "iOS Expert", "Android Guru", "React Native Specialist"],
+    "confidence": 0.94,
+    "Timeline": [
+      {
+        "title": "commit",
+        "url": "https://github.com/frankmobile/cross-platform-app/commit/j9i8h7g6f5e4d3c2b1a0",
+        "timestamp": "2024-04-26T12:05:00Z",
+        "caption": "Implemented cross-platform state management solution",
+        "labels": ["Mobile", "State Management", "Cross-platform"]
+      },
+      {
+        "title": "issue",
+        "url": "https://github.com/frankmobile/cross-platform-app/issues/987",
+        "timestamp": "2024-04-27T10:20:00Z",
+        "caption": "Issue reported: 'Poor app performance on low-end devices'",
+        "labels": ["Performance", "Mobile Optimization", "Low-end Devices"]
+      }
+    ]
+  }
+]
